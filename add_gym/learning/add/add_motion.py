@@ -23,11 +23,13 @@ class ADDMotion:
             device=device,
         )
         sampler_config = config.get("sampler", {})
+        num_disc_obs_steps = config.get("num_disc_obs_steps", 1)
         self.sampler = AdaptiveSegmentSampler(
             clip_lengths=self.motion_lib.get_motion_lengths(),
             dt=self.env.ctrl_dt,
             num_segments=sampler_config.get("num_segments", 20),
             temperature=sampler_config.get("temperature", 1.0),
+            min_start_time=(num_disc_obs_steps - 1) * self.env.ctrl_dt,
         )
         self._rand_reset = config.get("rand_reset", True)
 
