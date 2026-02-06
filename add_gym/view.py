@@ -151,6 +151,7 @@ class ViewEnvironment:
         # Build scene
         self.scene.build(
             n_envs=1,
+            env_spacing=(0.,0.),
         )
         if self.video_output_dir:
             self.log_camera.follow_entity(self.robot.ref_entity)

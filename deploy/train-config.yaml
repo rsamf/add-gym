@@ -20,7 +20,7 @@ robot:
   urdf_path: /opt/ml/input/data/assets/g1_description/g1_29.xml
 
 task:
-  motion_file: /opt/ml/input/data/assets/motions/dance1_subject3.motion
+  motion_file: /opt/ml/input/data/assets/motions/walk1_subject1_trimmed.motion
   visualize_ref_char: false
   enable_early_termination: true
 
