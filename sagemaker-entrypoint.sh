@@ -148,11 +148,6 @@ if [ "$IS_DISTRIBUTED" == "1" ]; then
 
 else
     echo "Single-instance training"
-    if [ $# -eq 0 ]; then
-        echo "=== Starting default training ==="
-        exec python -m add_gym.main
-    else
-        echo "=== Executing provided command ==="
-        exec "$@"
-    fi
+    echo "=== Starting training ==="
+    exec python -m add_gym.main "$@"
 fi
