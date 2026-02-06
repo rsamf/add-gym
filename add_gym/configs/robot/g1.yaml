@@ -1,0 +1,61 @@
+urdf_path: assets/g1_description/g1_29.xml
+gain_scale: 1.2
+lin_vel_x_range: [-1.0, 1.0]
+lin_vel_y_range: [-1.0, 1.0]
+ang_vel_range: [-3.14, 3.14]
+commands_scale: [0.2, 0.2, 1.0]
+links:
+  - match: pelvis
+    tags:
+      - base
+      - core
+  - match: .*(waist|torso).*
+    tags:
+      - core
+      - upper_body
+  - match: .*(hip|knee).*
+    tags:
+      - lower_body
+      - leg
+  - match: .*(ankle).*
+    tags:
+      - lower_body
+      - leg
+      - feet
+  - match: .*(shoulder|elbow|wrist).*
+    tags:
+      - upper_body
+      - arm
+  - match: .*(hand|thumb).*
+    tags:
+      - upper_body
+      - hand
+joints:
+  - match: root_joint|floating_base_joint
+    tags:
+      - base
+  - match: .*(waist).*
+    tags:
+      - core
+      - upper_body
+  - match: .*(hip|knee|ankle).*
+    tags:
+      - lower_body
+      - leg
+  - match: .*(hip).*
+    tags:
+      - hip
+  - match: .*(knee).*
+    tags:
+      - knee
+  - match: .*(ankle).*
+    tags:
+      - ankle
+  - match: .*(shoulder|elbow|wrist).*
+    tags:
+      - upper_body
+      - arm
+  - match: .*(hand|thumb).*
+    tags:
+      - upper_body
+      - hand

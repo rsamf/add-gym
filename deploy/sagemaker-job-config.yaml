@@ -1,0 +1,21 @@
+---
+# G1 SageMaker Training Job Configuration
+
+# Job configuration
+job:
+  name: g1-training-job # Replaced by github workflow with short SHA
+  instance_type: ml.g4dn.xlarge  # GPU instance type (1x T4)
+  instance_count: 1
+  volume_size: 50  # GB
+  max_runtime: 432000  # seconds (5 days)
+
+# AWS Configuration
+aws:
+  s3_prefix: outputs
+  spot_enabled: false  # Enable Spot Instances for cost savings
+
+# Tags
+tags:
+  Name: G1-SageMaker-Training
+  Project: G1-Robot
+  Environment: Development

@@ -1,0 +1,12 @@
+# @package _global_
+defaults:
+  - /agent@agent: add_g1
+  - /engine@engine: genesis
+  - /robot@robot: g1
+  - /task@task: pose
+  - /distributed@distributed: ddp
+  - _self_
+
+mode: train
+experiment_name: g1_train_0
+log_dir: logs/

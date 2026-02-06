@@ -1,0 +1,16 @@
+# @package _global_
+defaults:
+  - /agent@agent: add_g1
+  - /engine@engine: genesis
+  - /robot@robot: g1
+  - /task@task: pose
+  - _self_
+
+task:
+  visualize_ref_char: True
+  motion_file: ../assets/motions/dance1_subject3.motion
+
+video_output_dir: videos
+
+engine:
+  num_envs: 1

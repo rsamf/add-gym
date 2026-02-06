@@ -1,0 +1,13 @@
+# @package _global_
+defaults:
+  - /agent@agent: add_g1
+  - /engine@engine: genesis
+  - /robot@robot: g1
+  - /task@task: pose
+  - _self_
+
+mode: test
+
+engine:
+  num_envs: 1
+  enable_video_recording: false

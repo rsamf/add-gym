@@ -1,0 +1,5 @@
+enabled: true
+
+strategy:
+  # Find unused parameters in DDP (useful for debugging)
+  ddp_find_unused_parameters: false

@@ -1,0 +1,8 @@
+aws_region  = "us-west-2"
+github_repo = "your-user/add-gym"
+
+# Self-hosted runner
+# github_pat is sensitive – pass via TF_VAR_github_pat env var or -var flag
+runner_instance_type = "t3.large"
+runner_volume_size_gb = 50
+runner_labels = "self-hosted,linux,x64"

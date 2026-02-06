@@ -1,0 +1,38 @@
+# Hydra configuration overrides for SageMaker training
+# This file gets mounted to the SageMaker container and overrides base configs
+
+agent: add_g1
+engine: genesis
+robot: g1
+task: pose
+distributed:
+  enabled: false
+
+log_dir: /opt/ml/checkpoints
+
+# Environment settings for cloud training
+engine:
+  num_envs: 4096
+  enable_viewer: false
+  enable_video_recording: false
+
+robot:
+  urdf_path: /opt/ml/input/data/assets/g1_description/g1_29.xml
+
+task:
+  motion_file: /opt/ml/input/data/assets/motions/dance1_subject3.motion
+  visualize_ref_char: false
+  enable_early_termination: true
+
+agent:
+  max_samples: 999999999999999999
+  batch_size: 32
+  steps_per_iter: 128
+  disc_grad_penalty: 20
+  model:
+    disc_net: fc_2layers_1024units
+
+hydra:
+  searchpath:
+    - /app/add-gym/configs
+    - ../add-gym/add-gym/configs

@@ -1,0 +1,30 @@
+_target_: add_gym.engine.mjwarp_engine.MJWarpEngine
+
+num_envs: 16
+env_spacing: 2.0
+ctrl_dt: 0.01
+video_interval: 5000
+video_length: 20 # seconds
+visualize_camera: false
+enable_viewer: true
+enable_video_recording: true
+
+# MuJoCo Warp specific settings
+backend: "warp"              # warp, cuda, cpu
+integrator: "implicitfast"   # MuJoCo integrator type
+solver_iterations: 4
+contact_model: "newton"
+
+# Stability: number of physics substeps per control step.
+# Internally sets MuJoCo timestep to ctrl_dt/substeps and runs `substeps` mjw.step() calls.
+substeps: 4
+
+# Optional MJWarp buffer sizing (helps avoid overflow warnings in contact-heavy scenes)
+# nconmax: 2048  # max contacts per world
+# njmax: 2048    # max constraints per world
+# naconmax: null # total contacts buffer (defaults to nworld * nconmax)
+
+# Controller safety (recommended when using unbounded Gaussian policy outputs)
+position_limit_margin: 1e-4   # shrink joint limits slightly to avoid hard-limit chatter
+max_target_delta: 0.5         # max radians per step change in PD target (slew limiter)
+max_torque: 200.0             # clamp PD torque (qfrc_applied) magnitude

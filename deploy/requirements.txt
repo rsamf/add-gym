@@ -1,0 +1,3 @@
+# Requirements for SageMaker job submission scripts
+boto3>=1.34.0
+pyyaml>=6.0

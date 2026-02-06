@@ -1,0 +1,10 @@
+_target_: add_gym.engine.genesis_engine.GenesisEngine
+
+num_envs: 16
+env_spacing: 2.0
+ctrl_dt: 0.01
+video_interval: 5000
+video_length: 20 # seconds
+visualize_camera: false
+enable_viewer: true
+enable_video_recording: true
