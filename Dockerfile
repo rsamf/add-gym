@@ -23,6 +23,8 @@ COPY sagemaker-entrypoint.sh /sagemaker-entrypoint.sh
 
 RUN chmod +x /sagemaker-entrypoint.sh
 
+ENV PATH="/app/.venv/bin:$PATH"
+
 # Override the base image entrypoint for SageMaker compatibility
 ENTRYPOINT ["/sagemaker-entrypoint.sh"]
 CMD ["python", "-m", "add_gym.main"]
