@@ -79,7 +79,9 @@ uv run python -m add-gym.main engine=mjwarp
 
 ### CI/CD Pipeline
 
-The project includes GitHub Actions workflows that automatically build and push the Docker image suitable for training.
+The project includes GitHub Actions workflows that automatically:
+* build and push the Docker image suitable for training
+* optionally, tag to push your trained model weights to Hugging Face
 
 **Crucial Setup:**
 To ensure the build pipeline works, you must set the `BASE_IMAGE` secret in your GitHub repository settings.
@@ -89,6 +91,7 @@ To ensure the build pipeline works, you must set the `BASE_IMAGE` secret in your
 In addition to `BASE_IMAGE`, you also need to set the following secrets:
 * `AWS_REGION`
 * `S3_BUCKET`
+* `HF_TOKEN` (optional, if you want to push your trained model to Hugging Face)
 
 ## SageMaker Training
 
