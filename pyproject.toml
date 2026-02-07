@@ -11,6 +11,7 @@ dependencies = [
     "s3fs>=2026.1.0",
     "tensorboard>=2.20.0",
     "torch>=2.8.0",
+    "torchvision>=0.23.0",
 ]
 
 [project.optional-dependencies]

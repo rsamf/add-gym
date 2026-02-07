@@ -2,12 +2,19 @@ import torch
 import add_gym.learning.amp_agent as amp_agent
 import add_gym.learning.ppo_agent as ppo_agent
 import add_gym.learning.diff_normalizer as diff_normalizer
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
 from add_gym.learning.add.add_observation import ADDObservation
 from add_gym.learning.add.add_reward import ADDReward
 from add_gym.learning.add.add_done import ADDDone
 from add_gym.learning.add.add_model import ADDModel
 from add_gym.learning.add.add_motion import ADDMotion
 from add_gym.envs.env import ImitationEnvironment
+from PIL import Image
+from torchvision.transforms.functional import to_tensor
+from io import BytesIO
 
 
 class ADDAgent(amp_agent.AMPAgent):
@@ -228,11 +235,32 @@ class ADDAgent(amp_agent.AMPAgent):
     def _log_train_info(self, train_info, test_info, env_diag_info, start_time):
         super()._log_train_info(train_info, test_info, env_diag_info, start_time)
         if self._iter % self._iters_per_output == 0:
-            bins = self._add_motion.sampler.num_segments
-            self._logger._writer.add_histogram(
-                "Sampler/Errors", self._add_motion.sampler.errors, self._iter, bins=bins
-            )
-            self._logger._writer.add_histogram(
-                "Sampler/Probs", self._add_motion.sampler.get_probs().cpu(), self._iter, bins=bins
-            )
+            self._log_sampler_distribution()
+
+    def _log_sampler_distribution(self):
+        sampler = self._add_motion.sampler
+        bins = sampler.num_segments
+
+        mean_errors = sampler.errors.mean(dim=0).cpu().numpy()
+        mean_probs = sampler.get_probs().mean(dim=0).cpu().numpy()
+        x = np.arange(bins)
+
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 3))
+        ax1.bar(x, mean_errors)
+        ax1.set_title("Mean Error per Segment")
+        ax1.set_xlabel("Segment")
+
+        ax2.bar(x, mean_probs)
+        ax2.set_title("Mean Prob per Segment")
+        ax2.set_xlabel("Segment")
+
+        fig.tight_layout()
+
+        buf = BytesIO()
+        fig.savefig(buf, format="png", dpi=100)
+        buf.seek(0)
+        plt.close(fig)
+
+        img = to_tensor(Image.open(buf))
+        self._logger._writer.add_image("Sampler/Distribution", img, self._iter)
 

@@ -1,6 +1,6 @@
 _target_: add_gym.engine.genesis_engine.GenesisEngine
 
-num_envs: 16
+num_envs: 4
 env_spacing: 2.0
 ctrl_dt: 0.01
 video_interval: 5000

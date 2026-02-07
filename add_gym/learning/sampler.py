@@ -3,7 +3,7 @@ import torch.nn.functional as F
 
 
 class AdaptiveSegmentSampler:
-    def __init__(self, clip_lengths, dt, num_segments=20, temperature=1.0, min_start_time=0.0):
+    def __init__(self, clip_lengths, dt, num_segments=20, temperature=None, min_start_time=0.0):
         self.num_segments = num_segments
         self.dt = dt
         self.temperature = temperature
@@ -64,8 +64,12 @@ class AdaptiveSegmentSampler:
             self.segment_sizes = self.segment_sizes.to(clip_ids.device)
 
         clip_errors = self.errors[clip_ids]
+        if self.temperature is None:
+            temperature = torch.max(clip_errors) + 1e-6
+        else: 
+            temperature = self.temperature
 
-        probs = F.softmax(clip_errors / self.temperature, dim=-1)
+        probs = F.softmax(clip_errors / temperature, dim=-1)
         return probs
 
     def sample_start_frame(self, clip_ids=None):

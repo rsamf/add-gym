@@ -28,7 +28,7 @@ class ADDMotion:
             clip_lengths=self.motion_lib.get_motion_lengths(),
             dt=self.env.ctrl_dt,
             num_segments=sampler_config.get("num_segments", 20),
-            temperature=sampler_config.get("temperature", 1.0),
+            temperature=sampler_config.get("temperature", None),
             min_start_time=(num_disc_obs_steps - 1) * self.env.ctrl_dt,
         )
         self._rand_reset = config.get("rand_reset", True)

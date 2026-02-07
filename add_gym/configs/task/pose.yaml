@@ -3,7 +3,7 @@ reward:
     pose: 1.0
 sampler:
   num_segments: 20
-  temperature: 1.0
+  # temperature: 1.0
 max_episode_length: 20 # seconds
 global_obs: True
 root_height_obs: True
