@@ -15,7 +15,7 @@ ENV PATH="/root/.local/bin/:$PATH"
 WORKDIR /app
 
 
-COPY pyproject.toml .
+COPY pyproject.toml uv.lock ./
 RUN uv sync --no-dev
 
 COPY add_gym/ add_gym/
