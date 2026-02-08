@@ -30,6 +30,16 @@ jobs:
         id: short-sha
         run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
+      - name: Extract branch sub-name
+        id: branch-info
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          if [[ "$BRANCH" == models/* ]]; then
+            echo "suffix=-${BRANCH#models/}" >> $GITHUB_OUTPUT
+          else
+            echo "suffix=" >> $GITHUB_OUTPUT
+          fi
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -60,7 +70,7 @@ jobs:
           SHORT_SHA: ${{ steps.short-sha.outputs.sha }}
         run: |
           python deploy/submit_sagemaker_job.py \
-            --job-name $SHORT_SHA \
+            --job-name "$SHORT_SHA${{ steps.branch-info.outputs.suffix }}" \
             --aws-region $AWS_REGION \
             --image-uri "${{ steps.login-ecr.outputs.registry }}/add-gym:$SHORT_SHA" \
             --s3-bucket ${{ secrets.S3_BUCKET }} \
