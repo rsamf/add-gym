@@ -34,6 +34,7 @@ dependencies = [
     { name = "tensorboard" },
     { name = "torch" },
     { name = "torchvision" },
+    { name = "z3-solver" },
 ]
 
 [package.optional-dependencies]
@@ -51,6 +52,7 @@ requires-dist = [
     { name = "tensorboard", specifier = ">=2.20.0" },
     { name = "torch", specifier = ">=2.8.0" },
     { name = "torchvision", specifier = ">=0.23.0" },
+    { name = "z3-solver", specifier = "==4.15.3.0" },
 ]
 provides-extras = ["mjwarp"]
 
