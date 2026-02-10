@@ -139,26 +139,26 @@ class ADDAgent(amp_agent.AMPAgent):
         return reward
 
     def _compute_disc_loss(self, batch):
-        disc_obs = batch["disc_obs"]
-        tar_disc_obs = batch["disc_obs_demo"]
+        policy_states = batch["disc_obs"]
+        target_states = batch["disc_obs_demo"]
 
-        pos_diff = self._pos_diff
-        pos_diff = pos_diff.unsqueeze(dim=0)
-
-        disc_pos_logit = self.model.eval_disc(pos_diff)
+        # Gather logits for positive/target samples
+        pos_obs = self._disc_obs_norm.normalize(target_states)
+        disc_pos_logit = self.model.eval_disc(pos_obs)
         disc_pos_logit = disc_pos_logit.squeeze(-1)
 
-        diff_obs = tar_disc_obs - disc_obs
-        norm_diff_obs = self._disc_obs_norm.normalize(diff_obs)
-        norm_diff_obs.requires_grad_(True)
-        disc_neg_logit = self.model.eval_disc(norm_diff_obs)
+        # Gather logits for negative/policy samples
+        neg_obs = self._disc_obs_norm.normalize(policy_states)
+        neg_obs.requires_grad_(True)
+        disc_neg_logit = self.model.eval_disc(neg_obs)
         disc_neg_logit = disc_neg_logit.squeeze(-1)
 
+        # Gather loss
         disc_loss_pos = self._disc_loss_pos(disc_pos_logit)
         disc_loss_neg = self._disc_loss_neg(disc_neg_logit)
         disc_loss = 0.5 * (disc_loss_pos + disc_loss_neg)
 
-        # logit reg
+        # Logit reg only for negative samples
         logit_weights = self.model.get_disc_logit_weights()
         disc_logit_loss = torch.sum(torch.square(logit_weights))
         disc_loss += self._disc_logit_reg * disc_logit_loss
@@ -166,7 +166,7 @@ class ADDAgent(amp_agent.AMPAgent):
         # grad penalty
         disc_neg_grad = torch.autograd.grad(
             disc_neg_logit,
-            norm_diff_obs,
+            neg_obs,
             grad_outputs=torch.ones_like(disc_neg_logit),
             create_graph=True,
             retain_graph=True,

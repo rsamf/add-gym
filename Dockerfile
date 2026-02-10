@@ -11,14 +11,20 @@ RUN apt-get update && \
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
 RUN sh /uv-installer.sh && rm /uv-installer.sh
 ENV PATH="/root/.local/bin/:$PATH"
+ENV UV_LINK_MODE=copy
 
 WORKDIR /app
 
-
+# Install dependencies (cached unless pyproject.toml or uv.lock change)
 COPY pyproject.toml uv.lock ./
-RUN uv sync --no-dev
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --no-dev --no-install-project
 
+# Copy application code (changes here don't re-install deps)
 COPY add_gym/ add_gym/
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --no-dev --no-editable
+
 COPY sagemaker-entrypoint.sh /sagemaker-entrypoint.sh
 
 RUN chmod +x /sagemaker-entrypoint.sh
