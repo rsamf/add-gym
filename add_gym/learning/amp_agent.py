@@ -176,12 +176,14 @@ class AMPAgent(ppo_agent.PPOAgent):
 
     def _disc_loss_neg(self, disc_logits):
         bce = torch.nn.BCEWithLogitsLoss()
-        loss = bce(disc_logits, torch.ones_like(disc_logits) * .1)
+        loss = bce(disc_logits, torch.zeros_like(disc_logits))
         return loss
 
     def _disc_loss_pos(self, disc_logits):
         bce = torch.nn.BCEWithLogitsLoss()
-        loss = bce(disc_logits, torch.ones_like(disc_logits) * .9)
+        # One-sided label smoothing: targets in [0.8, 1.0]
+        smooth_labels = 1.0 - torch.rand_like(disc_logits) * 0.2
+        loss = bce(disc_logits, smooth_labels)
         return loss
 
     def _compute_disc_acc(self, disc_agent_logit, disc_demo_logit):
