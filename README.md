@@ -12,6 +12,12 @@
   </p>
 
   <p align="center">
+    <img src="doc/walk.gif" width="32%">
+    <img src="doc/dance.gif" width="32%">
+    <img src="doc/run.gif" width="32%">
+  </p>
+
+  <p align="center">
     <a href="#overview">Overview</a> •
     <a href="#getting-started">Getting Started</a> •
     <a href="#deployment">Deployment</a> •
