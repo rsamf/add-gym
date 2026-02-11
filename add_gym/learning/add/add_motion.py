@@ -3,14 +3,15 @@ from typing import TYPE_CHECKING
 import torch
 from add_gym.anim import motion_lib
 from add_gym.learning.sampler import AdaptiveSegmentSampler
-
+from hydr8 import use
 
 if TYPE_CHECKING:
     from add_gym.envs.env import Environment
 
 
 class ADDMotion:
-    def __init__(self, config: dict, env: "Environment", device: str):
+    @use("task", as_dict="config")
+    def __init__(self, env: "Environment", device: str, config: dict):
         self.env = env
         self.device = device
         self.config = config

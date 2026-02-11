@@ -6,7 +6,7 @@ import add_gym.util.torch_util as torch_util
 
 
 class BaseModel(torch.nn.Module):
-    def __init__(self, config, env):
+    def __init__(self):
         super().__init__()
         self._activation = torch.nn.ReLU
 

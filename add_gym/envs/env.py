@@ -3,10 +3,11 @@ from hydra.utils import instantiate
 from add_gym.robot import Manipulator
 from pathlib import Path
 from add_gym.learning.base_agent import AgentMode
-
+import hydr8
 
 class Environment:
-    def __init__(self, config: dict, device: str):
+    
+    def __init__(self, device: str):
         """
         Environment base class for Robotic Manipulation tasks.
         Contains the following components:
@@ -20,6 +21,7 @@ class Environment:
         self.device = device
 
         # configs
+        config = hydr8.get()
         self.env_cfg = config
         self.engine_cfg = config["engine"]
         self.robot_cfg = config["robot"]
@@ -174,8 +176,8 @@ class Environment:
 
 
 class ImitationEnvironment(Environment):
-    def __init__(self, config, device):
-        super().__init__(config, device)
+    def __init__(self, device):
+        super().__init__(device)
         self._diagnostics = {}
 
     def get_reward_succ(self):

@@ -3,11 +3,12 @@ import torch
 import add_gym.learning.base_model as base_model
 import add_gym.learning.nets.net_builder as net_builder
 import add_gym.util.torch_util as torch_util
-
+from hydr8 import use
 
 class PPOModel(base_model.BaseModel):
-    def __init__(self, config, env, obs_shape, action_space):
-        super().__init__(config, env)
+    @use("agent.model", as_dict="config")
+    def __init__(self, obs_shape, action_space, config):
+        super().__init__()
         self._build_nets(config, obs_shape, action_space)
 
     def eval_actor(self, obs):

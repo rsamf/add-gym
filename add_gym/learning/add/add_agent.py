@@ -20,23 +20,20 @@ from io import BytesIO
 class ADDAgent(amp_agent.AMPAgent):
     NAME = "ADD"
 
-    def __init__(self, env_config, distributed=False):
+    def __init__(self, distributed=False):
         if torch.cuda.is_available():
             # Device Masking active: Logical device is always 0
             device = "cuda:0"
         else:
             device = "cpu"
         print(f"Using device: {device}")
-        self._env = ImitationEnvironment(env_config, device)
-        self._add_motion = ADDMotion(env_config["task"], self._env, device)
+        self._env = ImitationEnvironment(device)
+        self._add_motion = ADDMotion(self._env, device)
         self._add_obs = ADDObservation(
-            env_config["task"], self._env, self._add_motion, device
+            self._env, self._add_motion, device
         )
-        self._add_reward = ADDReward(
-            env_config["task"], self._env, self._add_obs, device
-        )
+        self._add_reward = ADDReward(self._env, self._add_obs, device)
         self._add_done = ADDDone(
-            env_config["task"],
             self._env,
             self._add_obs,
             self._add_motion,
@@ -44,16 +41,13 @@ class ADDAgent(amp_agent.AMPAgent):
             device,
         )
         super().__init__(
-            env_config["agent"], self._env, device, distributed=distributed
+            self._env, device, distributed=distributed
         )
 
         self._pos_diff = self._build_pos_diff()
 
-    def _build_model(self, config):
-        model_config = config["model"]
+    def _build_model(self):
         self._model = ADDModel(
-            model_config,
-            self._env,
             self._add_obs.get_obs_shape(),
             self._env.robot.get_action_space(),
             self._add_obs.get_disc_obs_shape(),
