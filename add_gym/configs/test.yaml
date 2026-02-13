@@ -11,3 +11,6 @@ mode: test
 engine:
   num_envs: 1
   enable_video_recording: false
+
+task:
+  visualize_ref_char: true
