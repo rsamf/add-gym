@@ -133,18 +133,18 @@ class ADDAgent(amp_agent.AMPAgent):
         policy_states = batch["disc_obs"]
         target_states = batch["disc_obs_demo"]
 
-        # Gather logits for positive/target samples
-        pos_obs = self._disc_obs_norm.normalize(target_states)
-        disc_pos_logit = self.model.eval_disc(pos_obs)
+        pos_diff = self._pos_diff
+        pos_diff = pos_diff.unsqueeze(dim=0)
+
+        disc_pos_logit = self.model.eval_disc(pos_diff)
         disc_pos_logit = disc_pos_logit.squeeze(-1)
 
-        # Gather logits for negative/policy samples
-        neg_obs = self._disc_obs_norm.normalize(policy_states)
-        neg_obs.requires_grad_(True)
-        disc_neg_logit = self.model.eval_disc(neg_obs)
+        diff_obs = target_states - policy_states
+        norm_diff_obs = self._disc_obs_norm.normalize(diff_obs)
+        norm_diff_obs.requires_grad_(True)
+        disc_neg_logit = self.model.eval_disc(norm_diff_obs)
         disc_neg_logit = disc_neg_logit.squeeze(-1)
 
-        # Gather loss
         disc_loss_pos = self._disc_loss_pos(disc_pos_logit)
         disc_loss_neg = self._disc_loss_neg(disc_neg_logit)
         disc_loss = 0.5 * (disc_loss_pos + disc_loss_neg)
@@ -157,7 +157,7 @@ class ADDAgent(amp_agent.AMPAgent):
         # grad penalty
         disc_neg_grad = torch.autograd.grad(
             disc_neg_logit,
-            neg_obs,
+            norm_diff_obs,
             grad_outputs=torch.ones_like(disc_neg_logit),
             create_graph=True,
             retain_graph=True,
