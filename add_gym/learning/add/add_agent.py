@@ -12,9 +12,6 @@ from add_gym.learning.add.add_done import ADDDone
 from add_gym.learning.add.add_model import ADDModel
 from add_gym.learning.add.add_motion import ADDMotion
 from add_gym.envs.env import ImitationEnvironment
-from PIL import Image
-from torchvision.transforms.functional import to_tensor
-from io import BytesIO
 
 
 class ADDAgent(amp_agent.AMPAgent):
@@ -250,11 +247,6 @@ class ADDAgent(amp_agent.AMPAgent):
 
         fig.tight_layout()
 
-        buf = BytesIO()
-        fig.savefig(buf, format="png", dpi=100)
-        buf.seek(0)
+        self._logger.log_image("Sampler_Distribution", fig, self._iter)
         plt.close(fig)
-
-        img = to_tensor(Image.open(buf))
-        self._logger._writer.add_image("Sampler/Distribution", img, self._iter)
 
