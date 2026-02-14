@@ -116,7 +116,7 @@ def train_command(cfg: DictConfig):
     """
     Execute training with optional distributed training.
 
-    Metrics Platform: TensorBoard
+    Metrics Platform: MLflow
 
     Args:
         cfg: Hydra configuration
