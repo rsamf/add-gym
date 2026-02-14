@@ -24,7 +24,9 @@ class MLflowLogger(logger.Logger):
 
         if logger.Logger.is_root():
             self._output_dir = os.path.dirname(filename)
-            mlflow.set_tracking_uri(self._output_dir)
+            mlflow.set_tracking_uri(f"file://{os.path.abspath(self._output_dir)}")
+            experiment_name = os.path.basename(self._output_dir) or "default"
+            mlflow.set_experiment(experiment_name)
             self._run = mlflow.start_run()
 
     def set_step_key(self, var_key):
