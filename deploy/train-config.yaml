@@ -9,6 +9,7 @@ distributed:
   enabled: false
 
 log_dir: /opt/ml/checkpoints
++resume_path: /opt/ml/checkpoints/7b7c7a4-walk/model.pt
 
 # Environment settings for cloud training
 engine:
