@@ -12,31 +12,25 @@ from add_gym.learning.add.add_done import ADDDone
 from add_gym.learning.add.add_model import ADDModel
 from add_gym.learning.add.add_motion import ADDMotion
 from add_gym.envs.env import ImitationEnvironment
-from PIL import Image
-from torchvision.transforms.functional import to_tensor
-from io import BytesIO
 
 
 class ADDAgent(amp_agent.AMPAgent):
     NAME = "ADD"
 
-    def __init__(self, env_config, distributed=False):
+    def __init__(self, distributed=False):
         if torch.cuda.is_available():
             # Device Masking active: Logical device is always 0
             device = "cuda:0"
         else:
             device = "cpu"
         print(f"Using device: {device}")
-        self._env = ImitationEnvironment(env_config, device)
-        self._add_motion = ADDMotion(env_config["task"], self._env, device)
+        self._env = ImitationEnvironment(device)
+        self._add_motion = ADDMotion(self._env, device)
         self._add_obs = ADDObservation(
-            env_config["task"], self._env, self._add_motion, device
+            self._env, self._add_motion, device
         )
-        self._add_reward = ADDReward(
-            env_config["task"], self._env, self._add_obs, device
-        )
+        self._add_reward = ADDReward(self._env, self._add_obs, device)
         self._add_done = ADDDone(
-            env_config["task"],
             self._env,
             self._add_obs,
             self._add_motion,
@@ -44,16 +38,13 @@ class ADDAgent(amp_agent.AMPAgent):
             device,
         )
         super().__init__(
-            env_config["agent"], self._env, device, distributed=distributed
+            self._env, device, distributed=distributed
         )
 
         self._pos_diff = self._build_pos_diff()
 
-    def _build_model(self, config):
-        model_config = config["model"]
+    def _build_model(self):
         self._model = ADDModel(
-            model_config,
-            self._env,
             self._add_obs.get_obs_shape(),
             self._env.robot.get_action_space(),
             self._add_obs.get_disc_obs_shape(),
@@ -142,18 +133,18 @@ class ADDAgent(amp_agent.AMPAgent):
         policy_states = batch["disc_obs"]
         target_states = batch["disc_obs_demo"]
 
-        # Gather logits for positive/target samples
-        pos_obs = self._disc_obs_norm.normalize(target_states)
-        disc_pos_logit = self.model.eval_disc(pos_obs)
+        pos_diff = self._pos_diff
+        pos_diff = pos_diff.unsqueeze(dim=0)
+
+        disc_pos_logit = self.model.eval_disc(pos_diff)
         disc_pos_logit = disc_pos_logit.squeeze(-1)
 
-        # Gather logits for negative/policy samples
-        neg_obs = self._disc_obs_norm.normalize(policy_states)
-        neg_obs.requires_grad_(True)
-        disc_neg_logit = self.model.eval_disc(neg_obs)
+        diff_obs = target_states - policy_states
+        norm_diff_obs = self._disc_obs_norm.normalize(diff_obs)
+        norm_diff_obs.requires_grad_(True)
+        disc_neg_logit = self.model.eval_disc(norm_diff_obs)
         disc_neg_logit = disc_neg_logit.squeeze(-1)
 
-        # Gather loss
         disc_loss_pos = self._disc_loss_pos(disc_pos_logit)
         disc_loss_neg = self._disc_loss_neg(disc_neg_logit)
         disc_loss = 0.5 * (disc_loss_pos + disc_loss_neg)
@@ -166,7 +157,7 @@ class ADDAgent(amp_agent.AMPAgent):
         # grad penalty
         disc_neg_grad = torch.autograd.grad(
             disc_neg_logit,
-            neg_obs,
+            norm_diff_obs,
             grad_outputs=torch.ones_like(disc_neg_logit),
             create_graph=True,
             retain_graph=True,
@@ -256,11 +247,6 @@ class ADDAgent(amp_agent.AMPAgent):
 
         fig.tight_layout()
 
-        buf = BytesIO()
-        fig.savefig(buf, format="png", dpi=100)
-        buf.seek(0)
+        self._logger.log_image("Sampler_Distribution", fig, self._iter)
         plt.close(fig)
-
-        img = to_tensor(Image.open(buf))
-        self._logger._writer.add_image("Sampler/Distribution", img, self._iter)
 

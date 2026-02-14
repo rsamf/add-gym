@@ -6,11 +6,12 @@ import add_gym.learning.ppo_model as ppo_model
 import add_gym.util.torch_util as torch_util
 
 
+
 class PPOAgent(base_agent.BaseAgent):
     NAME = "PPO"
 
-    def __init__(self, config, env, device, distributed=False):
-        super().__init__(config, env, device, distributed=distributed)
+    def __init__(self, env, device, distributed=False):
+        super().__init__(env, device, distributed)
 
     def _load_params(self, config):
         super()._load_params(config)
@@ -33,9 +34,8 @@ class PPOAgent(base_agent.BaseAgent):
         self._exp_prob_beg = config.get("exp_prob_beg", 1.0)
         self._exp_prob_end = config.get("exp_prob_end", 1.0)
 
-    def _build_model(self, config):
-        model_config = config["model"]
-        self._model = ppo_model.PPOModel(model_config, self._env)
+    def _build_model(self):
+        self._model = ppo_model.PPOModel()
 
     def _get_exp_buffer_length(self):
         return self._steps_per_iter

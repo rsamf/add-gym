@@ -27,6 +27,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "genesis-world" },
+    { name = "hydr8" },
     { name = "hydra-core" },
     { name = "ipython", version = "8.37.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "ipython", version = "9.5.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
@@ -45,6 +46,7 @@ mjwarp = [
 [package.metadata]
 requires-dist = [
     { name = "genesis-world", specifier = "==0.3.10" },
+    { name = "hydr8", specifier = ">=0.1.0" },
     { name = "hydra-core", specifier = ">=1.3.2" },
     { name = "ipython", specifier = ">=8.37.0" },
     { name = "mujoco-warp", marker = "extra == 'mjwarp'", specifier = ">=0.0.2" },
@@ -1102,6 +1104,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/ee/79/9d54336f81984811bcbb74be7075fe48193aeb49466179e1ebcc17250ae7/gstaichi-4.3.1-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_34_aarch64.whl", hash = "sha256:474f3d5ac28fa0655f2511236ebf6fb39a1993447b0a02c01b572dbf40ec7685", size = 35567680, upload-time = "2025-12-03T19:45:28.221Z" },
     { url = "https://files.pythonhosted.org/packages/62/15/f9e0807aea77acaa535b16e79c521a089c3bf5a056267653acb5772d4070/gstaichi-4.3.1-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:658a124e76984049ca7a4cafd54ef1272b5a749c97b6400bb4f25330c4a64e12", size = 38195680, upload-time = "2025-12-03T19:45:20.983Z" },
     { url = "https://files.pythonhosted.org/packages/b1/a8/31ea876d3e331249e02e70ad9122e7b0b9c098e26d220ac8e5bf186b1295/gstaichi-4.3.1-cp313-cp313-win_amd64.whl", hash = "sha256:1adc668d2509ac70e3eedf421b17c99073671abf259c54b6ffbc01fb48199d45", size = 56187722, upload-time = "2025-12-03T19:48:50.017Z" },
+]
+
+[[package]]
+name = "hydr8"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "omegaconf" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/cd/91/92a0335b1f775befc8c0b77498f6769bc7eea2d1e2a3760ee6eaa979f8f9/hydr8-0.1.0.tar.gz", hash = "sha256:4db4d56de76a2335e254d9ef17929d670b5f9e850ff1e01d4afc09238cf44a93", size = 23675, upload-time = "2026-02-11T07:42:54.374Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5e/e7/65b6e28860022a8a4d1f711c3210808d243906b993e033dfa2b526e1d254/hydr8-0.1.0-py3-none-any.whl", hash = "sha256:bea4ec21d1dd0d3805f13adcd67a66518706f1e4d1b1762c9fc880dd98c15839", size = 6778, upload-time = "2026-02-11T07:42:53.177Z" },
 ]
 
 [[package]]

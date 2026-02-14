@@ -7,10 +7,11 @@ import torch
 import add_gym.learning.experience_buffer as experience_buffer
 import add_gym.learning.mp_optimizer as mp_optimizer
 import add_gym.learning.normalizer as normalizer
-import add_gym.util.tb_logger as tb_logger
+import add_gym.util.mlflow_logger as mlflow_logger
 import add_gym.util.torch_util as torch_util
 import add_gym.learning.distribution_gaussian_diag as distribution_gaussian_diag
 from add_gym.util.logger import Logger
+from hydr8 import use
 
 
 class DoneFlags(enum.Enum):
@@ -28,7 +29,8 @@ class AgentMode(enum.Enum):
 class BaseAgent(torch.nn.Module):
     NAME = "base"
 
-    def __init__(self, config, env, device, distributed=False):
+    @use("agent", as_dict="config")
+    def __init__(self, env, device, distributed, config):
         super().__init__()
 
         self._env = env
@@ -40,7 +42,7 @@ class BaseAgent(torch.nn.Module):
         self._load_params(config)
 
         self._build_normalizers()
-        self._build_model(config)
+        self._build_model()
         self.to(self._device)
 
         # Prepare model for distributed training
@@ -220,7 +222,7 @@ class BaseAgent(torch.nn.Module):
         self._steps_per_iter = config["steps_per_iter"]
 
     @abc.abstractmethod
-    def _build_model(self, config):
+    def _build_model(self):
         pass
 
     def _build_normalizers(self):
@@ -328,7 +330,7 @@ class BaseAgent(torch.nn.Module):
             return Logger()  # Dummy logger for non-main processes
 
         # Standard logging for single-instance training
-        log = tb_logger.TBLogger()
+        log = mlflow_logger.MLflowLogger()
         log.set_step_key("Samples")
         log.configure_output_file(log_file)
         return log

@@ -2,9 +2,9 @@ import os
 import subprocess
 import os.path as osp
 import hydra
+import hydr8
 import pickle
 import torch
-import torch._functorch.config
 import torch.distributed as dist
 from omegaconf import DictConfig, OmegaConf
 from pathlib import Path
@@ -70,7 +70,7 @@ def _run_training(cfg: DictConfig, distributed: bool = False):
 
     # Create agent
     # We pass the distributed flag to the agent so it can wrap the model in DDP
-    agent = ADDAgent(cfg, distributed=distributed)
+    agent = ADDAgent(distributed)
     out_model_file = log_dir / "model.pt"
     log_file = log_dir / "log.txt"
     int_output_dir = log_dir / "intermediate_outputs"
@@ -116,7 +116,7 @@ def train_command(cfg: DictConfig):
     """
     Execute training with optional distributed training.
 
-    Metrics Platform: TensorBoard
+    Metrics Platform: MLflow
 
     Args:
         cfg: Hydra configuration
@@ -195,6 +195,7 @@ def test_command(cfg: DictConfig):
 
 @hydra.main(version_base=None, config_path="configs", config_name="train")
 def main(cfg: DictConfig):
+    hydr8.init(cfg)
     if cfg.mode == "train":
         train_command(cfg)
     elif cfg.mode == "test":

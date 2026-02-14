@@ -7,8 +7,8 @@ import add_gym.util.torch_util as torch_util
 class AMPAgent(ppo_agent.PPOAgent):
     NAME = "AMP"
 
-    def __init__(self, config, env, device, distributed=False):
-        super().__init__(config, env, device, distributed=distributed)
+    def __init__(self, env, device, distributed=False):
+        super().__init__(env, device, distributed=distributed)
 
     def _load_params(self, config):
         super()._load_params(config)

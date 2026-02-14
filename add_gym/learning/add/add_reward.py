@@ -1,9 +1,11 @@
 import torch
 from torch import Tensor
 import add_gym.util.torch_util as torch_util
+from hydr8 import use
 
 class ADDReward:
-    def __init__(self, config, env, add_obs, device):
+    @use("task", as_dict="config")
+    def __init__(self, env, add_obs, device, config: dict):
         self.env = env
         self.add_obs = add_obs
         self.device = device

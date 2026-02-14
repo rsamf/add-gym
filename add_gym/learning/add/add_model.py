@@ -2,11 +2,13 @@ import torch
 import add_gym.learning.nets.net_builder as net_builder
 import add_gym.learning.ppo_model as ppo_model
 import add_gym.util.torch_util as torch_util
-
+from hydr8 import use
 
 class ADDModel(ppo_model.PPOModel):
-    def __init__(self, config, env, obs_shape, action_space, d_obs_shape):
-        super().__init__(config, env, obs_shape, action_space)
+    
+    @use("agent.model", as_dict="config")
+    def __init__(self, obs_shape, action_space, d_obs_shape, config):
+        super().__init__(obs_shape, action_space)
         self._build_disc(config, d_obs_shape)
 
     def eval_disc(self, disc_obs):

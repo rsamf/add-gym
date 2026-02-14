@@ -3,13 +3,15 @@ import add_gym.util.torch_util as torch_util
 import add_gym.util.circular_buffer as circular_buffer
 from typing import TYPE_CHECKING
 from add_gym.learning.add.add_motion import ADDMotion
+from hydr8 import use
 
 if TYPE_CHECKING:
     from add_gym.envs.env import Environment
 
 
 class ADDObservation:
-    def __init__(self, config: dict, env: "Environment", motion: ADDMotion, device: str):
+    @use("task", as_dict="config")
+    def __init__(self, env: "Environment", motion: ADDMotion, device: str, config: dict):
         self.env = env
         self.device = device
         self.config = config

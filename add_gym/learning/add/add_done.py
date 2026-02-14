@@ -3,6 +3,7 @@ from add_gym.learning.base_agent import DoneFlags
 from add_gym.anim import motion
 from add_gym.learning.add.add_observation import ADDObservation
 from add_gym.learning.add.add_motion import ADDMotion
+from hydr8 import use
 
 from typing import TYPE_CHECKING
 
@@ -10,7 +11,8 @@ if TYPE_CHECKING:
     from add_gym.envs.env import Environment
 
 class ADDDone:
-    def __init__(self, config: dict, env: "Environment", add_obs: ADDObservation, add_motion: ADDMotion, ground_plane, device):
+    @use("task", as_dict="config")
+    def __init__(self, env: "Environment", add_obs: ADDObservation, add_motion: ADDMotion, ground_plane, device, config: dict):
         self.env = env
         self.add_obs = add_obs
         self.add_motion = add_motion
