@@ -8,7 +8,7 @@ defaults:
 
 task:
   visualize_ref_char: True
-  motion_file: ../assets/motions/dance1_subject3.motion
+  motion_file: assets/motions/walk1_subject1_trimmed.motion
 
 video_output_dir: videos
 

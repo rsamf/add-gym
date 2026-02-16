@@ -6,6 +6,7 @@ from omegaconf import DictConfig
 from hydra.utils import instantiate
 from add_gym.anim import motion_lib, kin_char_model
 from add_gym.engine.base_engine import BaseEngine, BaseScene
+import rerun as rr
 
 
 class ViewManipulator:
@@ -32,8 +33,24 @@ class ViewManipulator:
             morph_pos=(0.0, 0.0, 0.0),
             morph_quat=(1.0, 0.0, 0.0, 0.0),
             material_type="rigid",
-            visualize_contact=False,  # No contact visualization needed for ref
+            visualize_contact=True,
         )
+
+        # Build joint limits for normalization
+        self.joint_limits = []
+        self.joint_names = []
+        for joint in self.ref_entity.joints:
+            self.joint_limits.extend(joint.dofs_limit)
+            # Store joint name for each DOF
+            for _ in joint.dofs_limit:
+                self.joint_names.append(joint.name)
+
+        self.joint_limits = torch.tensor(
+            self.joint_limits, device=device, dtype=torch.float32
+        )  # (num_dofs, 2)
+        # Extract just the non-root joint limits (skip first 6 for floating base)
+        self.non_root_joint_limits = self.joint_limits[6:]
+        self.non_root_joint_names = self.joint_names[6:]
 
     def _build_kin_char_model(self, char_file):
         _, file_ext = os.path.splitext(char_file)
@@ -266,6 +283,37 @@ class ViewEnvironment:
         if self.is_recording:
             self.log_camera.render()
 
+    def _log_joint_rotations(self):
+        """Log normalized joint rotations to rerun."""
+        # Set the current simulation time
+        rr.set_time("sim_time", duration=self.time_buf[0].item())
+
+        # Get current joint positions (already excludes root)
+        dof_pos = self.robot.dof_pos[0]  # Take first env
+
+        # Get joint limits
+        joint_limits = self.robot.non_root_joint_limits
+        joint_names = self.robot.non_root_joint_names
+
+        # Normalize to [-1, 1] range
+        lower_limits = joint_limits[:, 0]
+        upper_limits = joint_limits[:, 1]
+
+        # Normalize: (pos - mid) / (range/2) = (2*pos - (upper+lower)) / (upper-lower)
+        mid_point = (upper_limits + lower_limits) / 2.0
+        half_range = (upper_limits - lower_limits) / 2.0
+        normalized_pos = (dof_pos - mid_point) / half_range
+
+        # Clamp to [-1, 1] to handle any numerical issues
+        normalized_pos = torch.clamp(normalized_pos, -1.0, 1.0)
+
+        # Log each joint rotation
+        for name, norm_val in zip(joint_names, normalized_pos):
+            rr.log(
+                f"joints/{name}",
+                rr.Scalars(norm_val.item())
+            )
+
     def save_video(self):
         if self.video_output_dir and self.is_recording:
             import time
@@ -278,6 +326,9 @@ class ViewEnvironment:
     def step(self):
         # Update motion logic using current time
         self.update_ref_motion()
+
+        # Log joint rotations to rerun
+        self._log_joint_rotations()
 
         # Handle video recording (camera updates and rendering)
         self._video_step()
@@ -302,6 +353,9 @@ def main(cfg: DictConfig):
         else ("mps" if torch.backends.mps.is_available() else "cpu")
     )
     print(f"Using device: {device}")
+
+    # Initialize rerun for logging
+    rr.init("g1_joint_visualization", spawn=True)
 
     # Initialize Custom View Environment
     env = ViewEnvironment(cfg, device=device)
