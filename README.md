@@ -27,9 +27,22 @@
 
 ## Overview
 
-This is my (@rsamf) project that I work on for humanoid robotics imitation training using the ADD algorithm. It is designed to be scalable, supporting both local development cycles and large-scale distributed training on AWS SageMaker. I have made this repo public to serve inspiration to others or create a starting point for myself and others to train other RL policies. If you happen to use this repo and find any issues, feel free to make an issue. I will address it ASAP. If you find this repo useful, make sure to leave a ⭐. It helps a lot.
+An implementation of the ADD learning algorithm with additional optimizations, trained on high-performance simulators: Genesis and Mujoco Warp, and published freely available model weights. This repo makes imitation training scalable, supporting both local development cycles and large-scale distributed training on AWS SageMaker.
 
-I will also make model weights public once I get some good results :) 
+## Improvements from Original Code
+
+This code makes the following optimizations:
+
+* Removed feature engineering of link positions. Training can rely on joint rotations and root position/rotation and optionally, velocities.
+* Pre-calculating ground truth, so rotations and positions don't have to be re-calculated at every timestep
+* Removed usage of Nvidia's propietary Isaac Sim and deprecated Isaac Gym. Replaced it with Genesis and Mujoco Warp, which are much faster at startup.
+* Adaptive Sampler to focus on harder movements in the clip
+
+## Available model weights:
+
+More coming soon...
+
+* [Walk](https://huggingface.co/rsamf/g1-walk)
 
 ## Getting Started
 
@@ -56,13 +69,13 @@ I will also make model weights public once I get some good results :)
 To run the training loop locally:
 
 ```bash
-uv run python -m add-gym.main
+uv run python -m add_gym.main
 ```
 
 You can customize the run using Hydra configuration overrides:
 
 ```bash
-uv run python -m add-gym.main engine.num_envs=4096
+uv run python -m add_gym.main engine.num_envs=4096
 ```
 
 ### Mujoco Warp
