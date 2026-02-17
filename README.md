@@ -50,7 +50,16 @@ This code makes the following optimizations:
 
 More coming soon...
 
-* [Walk](https://huggingface.co/rsamf/g1-walk)
+* [Walk](https://huggingface.co/rsamf/g1-walk) | Motion file: assets/motions/walk1_subject1_trimmed.motion
+
+#### To test out one of the available model weights
+
+1. Clone the repo
+2. Download the model weights from Hugging Face
+3. `git checkout [tag]`
+
+    Ex: `git checkout walk`
+4. `uv run python -m add_gym.main --config-name test +resume_path=<path/to/model.pt> task.motion_file=<path/to/file.motion>`
 
 ## Getting Started
 
