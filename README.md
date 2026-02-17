@@ -3,7 +3,15 @@
 
   <p align="center">
     <img alt="Python Version" src="https://img.shields.io/badge/python-3.10-blue">
-    <img alt="Manager" src="https://img.shields.io/badge/managed%20by-uv-purple">
+    <a href="https://github.com/astral-sh/uv">
+      <img alt="Manager" src="https://img.shields.io/badge/managed%20by-uv-purple">
+    </a>
+    <a href="https://github.com/Genesis-Embodied-AI/Genesis">
+      <img alt="Genesis Simulator" src="https://img.shields.io/badge/simulator-genesis-teal">
+    </a>
+    <a href="https://github.com/google-deepmind/mujoco_warp">
+      <img alt="Mujoco Warp" src="https://img.shields.io/badge/simulator-warp-teal">
+    </a>
   </p>
 
   <p align="center">
@@ -21,7 +29,7 @@
     <a href="#overview">Overview</a> •
     <a href="#getting-started">Getting Started</a> •
     <a href="#deployment">Deployment</a> •
-    <a href="#sagemaker">SageMaker Training</a>
+    <a href="#sagemaker-training">SageMaker Training</a>
   </p>
 </p>
 
@@ -29,7 +37,7 @@
 
 An implementation of the ADD learning algorithm with additional optimizations, trained on high-performance simulators: Genesis and Mujoco Warp, and published freely available model weights. This repo makes imitation training scalable, supporting both local development cycles and large-scale distributed training on AWS SageMaker.
 
-## Improvements from Original Code
+### Improvements from Original Code
 
 This code makes the following optimizations:
 
@@ -38,7 +46,7 @@ This code makes the following optimizations:
 * Removed usage of Nvidia's propietary Isaac Sim and deprecated Isaac Gym. Replaced it with Genesis and Mujoco Warp, which are much faster at startup.
 * Adaptive Sampler to focus on harder movements in the clip
 
-## Available model weights:
+### Available model weights:
 
 More coming soon...
 
