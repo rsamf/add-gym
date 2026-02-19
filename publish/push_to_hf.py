@@ -91,7 +91,7 @@ tags:
 # {repo_id.split('/')[-1]}
 
 PyTorch checkpoint for a G1 humanoid locomotion policy trained with
-ADD (Adversarial Distillation of Demonstrations).
+ADD (Adversarial Differential of Discriminators).
 
 ## Checkpoint info
 
