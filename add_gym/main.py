@@ -182,7 +182,7 @@ def train_command(cfg: DictConfig):
 
 @torch.inference_mode()
 def test_command(cfg: DictConfig):
-    agent = ADDAgent(cfg)
+    agent = ADDAgent()
 
     resume_path = cfg.get("resume_path")
     resume_path = _resolve_resume_path(resume_path)

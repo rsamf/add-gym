@@ -17,5 +17,5 @@ dependencies = [
 
 [project.optional-dependencies]
 mjwarp = [
-    "mujoco-warp>=0.0.2",
+    "mujoco-warp>=3.5.0",
 ]
