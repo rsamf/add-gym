@@ -29,7 +29,8 @@
     <a href="#overview">Overview</a> •
     <a href="#getting-started">Getting Started</a> •
     <a href="#deployment">Deployment</a> •
-    <a href="#sagemaker-training">SageMaker Training</a>
+    <a href="#sagemaker-training">SageMaker Training</a> •
+    <a href="#acknowledgements">Acknowledgements</a>
   </p>
 </p>
 
@@ -51,6 +52,7 @@ This code makes the following optimizations:
 More coming soon...
 
 * [Walk](https://huggingface.co/rsamf/g1-walk) | Motion file: assets/motions/walk1_subject1_trimmed.motion
+* [Dance](https://huggingface.co/rsamf/g1-dance) | Motion file: assets/motions/dance1_subject3.motion
 
 #### To test out one of the available model weights
 
@@ -151,3 +153,12 @@ You can override job parameters in the Hydra config.
 ### 3. Train
 
 Any commit pushed to a branch named models or models/* will trigger a job to build and Sagemaker job.
+
+## Acknowledgements
+
+This project was not possible if it weren't for:
+
+* Adversarial Differential Discriminators ([Original Implementation](https://github.com/xbpeng/MimicKit))
+* [LAFAN1 Retargeting Dataset](https://huggingface.co/datasets/lvhaidong/LAFAN1_Retargeting_Dataset)
+* [Genesis](https://github.com/Genesis-Embodied-AI/Genesis/tree/main)
+* [Mujoco Warp](https://github.com/google-deepmind/mujoco_warp)
