@@ -2,5 +2,6 @@
 __pycache__/
 outputs/
 logs/
+mlruns/
 videos/
 .venv/

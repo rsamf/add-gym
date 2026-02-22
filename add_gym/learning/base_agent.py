@@ -4,6 +4,7 @@ import numpy as np
 import os
 import time
 import torch
+import mlflow.pytorch
 import add_gym.learning.experience_buffer as experience_buffer
 import add_gym.learning.mp_optimizer as mp_optimizer
 import add_gym.learning.normalizer as normalizer
@@ -78,7 +79,7 @@ class BaseAgent(torch.nn.Module):
             return self._model.module
         return self._model
 
-    def train_model(self, out_model_file, int_output_dir, log_file):
+    def train_model(self, out_model_file, log_file):
         max_samples = self._config.get("max_samples", int(1e6))
         start_time = time.time()
 
@@ -108,7 +109,7 @@ class BaseAgent(torch.nn.Module):
 
             if output_iter:
                 self._logger.write_log()
-                self._output_train_model(self._iter, out_model_file, int_output_dir)
+                self._output_train_model(self._iter, out_model_file)
 
                 self._train_return_tracker.reset()
                 self._curr_obs, self._curr_info = self._reset_envs()
@@ -155,6 +156,7 @@ class BaseAgent(torch.nn.Module):
             "sample_count": self._sample_count,
         }
         torch.save(checkpoint, out_file)
+        return checkpoint
 
     def load(self, in_file):
         checkpoint = torch.load(in_file, map_location=self._device)
@@ -547,20 +549,19 @@ class BaseAgent(torch.nn.Module):
 
         return loss
 
-    def _output_train_model(self, iter, out_model_file, int_output_dir):
+    def _output_train_model(self, iter, out_model_file):
         # Save model checkpoint
         # This is only called on main process in distributed mode due to logic in main.py
         # BUT we double check here to be safe, as main.py logic might be bypassed or flawed
         if self._distributed and torch.distributed.get_rank() != 0:
             return
 
-        self.save(out_model_file)
-
-        if int_output_dir != "":
-            int_model_file = os.path.join(
-                int_output_dir, "model_{:010d}.pt".format(iter)
-            )
-            self.save(int_model_file)
+        checkpoint = self.save(out_model_file)
+        mlflow.pytorch.log_model(
+            pytorch_model=checkpoint,
+            name=f"model_{iter:010d}",
+            step=iter,
+        )
 
 
 class ReturnTracker:

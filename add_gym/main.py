@@ -73,16 +73,12 @@ def _run_training(cfg: DictConfig, distributed: bool = False):
     agent = ADDAgent(distributed)
     out_model_file = log_dir / "model.pt"
     log_file = log_dir / "log.txt"
-    int_output_dir = log_dir / "intermediate_outputs"
 
     # Create directories (only on main process)
     if is_main_process:
         output_dir = osp.dirname(out_model_file)
         if output_dir != "" and (not osp.exists(output_dir)):
             os.makedirs(output_dir, exist_ok=True)
-
-        if int_output_dir != "" and (not osp.exists(int_output_dir)):
-            os.makedirs(int_output_dir, exist_ok=True)
 
     # Synchronize all workers before loading checkpoints
     if distributed:
@@ -107,7 +103,6 @@ def _run_training(cfg: DictConfig, distributed: bool = False):
     # Run training
     agent.train_model(
         out_model_file=out_model_file,
-        int_output_dir=int_output_dir,
         log_file=log_file,
     )
 

@@ -36,21 +36,31 @@ class ViewManipulator:
             visualize_contact=True,
         )
 
-        # Build joint limits for normalization
-        self.joint_limits = []
+        # Joint limits will be initialized after scene is built
+        self.joint_limits = None
+        self.non_root_joint_limits = None
         self.joint_names = []
+        self.non_root_joint_names = []
+        self._device = device
+
+    def _initialize_joint_limits(self):
+        """Initialize joint limits after scene is built."""
+        # Build joint limits for normalization
+        joint_limits_list = []
+        joint_names_list = []
         for joint in self.ref_entity.joints:
-            self.joint_limits.extend(joint.dofs_limit)
+            joint_limits_list.extend(joint.dofs_limit)
             # Store joint name for each DOF
             for _ in joint.dofs_limit:
-                self.joint_names.append(joint.name)
+                joint_names_list.append(joint.name)
 
         self.joint_limits = torch.tensor(
-            self.joint_limits, device=device, dtype=torch.float32
+            joint_limits_list, device=self._device, dtype=torch.float32
         )  # (num_dofs, 2)
         # Extract just the non-root joint limits (skip first 6 for floating base)
         self.non_root_joint_limits = self.joint_limits[6:]
-        self.non_root_joint_names = self.joint_names[6:]
+        self.joint_names = joint_names_list
+        self.non_root_joint_names = joint_names_list[6:]
 
     def _build_kin_char_model(self, char_file):
         _, file_ext = os.path.splitext(char_file)
@@ -170,6 +180,10 @@ class ViewEnvironment:
             n_envs=1,
             env_spacing=(0.,0.),
         )
+
+        # Initialize joint limits after scene is built
+        self.robot._initialize_joint_limits()
+
         if self.video_output_dir:
             self.log_camera.follow_entity(self.robot.ref_entity)
             self.log_camera.start_recording()

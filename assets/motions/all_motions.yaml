@@ -1,0 +1,81 @@
+motions:
+  - file: "assets/motions/dance1_subject1.motion"
+    weight: 1
+  - file: "assets/motions/dance1_subject2.motion"
+    weight: 1
+  - file: "assets/motions/dance1_subject3.motion"
+    weight: 1
+  - file: "assets/motions/dance2_subject1.motion"
+    weight: 1
+  - file: "assets/motions/dance2_subject2.motion"
+    weight: 1
+  - file: "assets/motions/dance2_subject3.motion"
+    weight: 1
+  - file: "assets/motions/dance2_subject4.motion"
+    weight: 1
+  - file: "assets/motions/dance2_subject5.motion"
+    weight: 1
+  - file: "assets/motions/fallAndGetUp1_subject1.motion"
+    weight: 1
+  - file: "assets/motions/fallAndGetUp1_subject4.motion"
+    weight: 1
+  - file: "assets/motions/fallAndGetUp1_subject5.motion"
+    weight: 1
+  - file: "assets/motions/fallAndGetUp2_subject2.motion"
+    weight: 1
+  - file: "assets/motions/fallAndGetUp2_subject3.motion"
+    weight: 1
+  - file: "assets/motions/fallAndGetUp3_subject1.motion"
+    weight: 1
+  - file: "assets/motions/fight1_subject2.motion"
+    weight: 1
+  - file: "assets/motions/fight1_subject3.motion"
+    weight: 1
+  - file: "assets/motions/fight1_subject5.motion"
+    weight: 1
+  - file: "assets/motions/fightAndSports1_subject1.motion"
+    weight: 1
+  - file: "assets/motions/fightAndSports1_subject4.motion"
+    weight: 1
+  - file: "assets/motions/jumps1_subject1.motion"
+    weight: 1
+  - file: "assets/motions/jumps1_subject2.motion"
+    weight: 1
+  - file: "assets/motions/jumps1_subject5.motion"
+    weight: 1
+  - file: "assets/motions/run1_subject2.motion"
+    weight: 1
+  - file: "assets/motions/run1_subject5.motion"
+    weight: 1
+  - file: "assets/motions/run2_subject1.motion"
+    weight: 1
+  - file: "assets/motions/run2_subject4.motion"
+    weight: 1
+  - file: "assets/motions/sprint1_subject2.motion"
+    weight: 1
+  - file: "assets/motions/sprint1_subject4.motion"
+    weight: 1
+  - file: "assets/motions/walk1_subject1.motion"
+    weight: 1
+  - file: "assets/motions/walk1_subject2.motion"
+    weight: 1
+  - file: "assets/motions/walk1_subject5.motion"
+    weight: 1
+  - file: "assets/motions/walk2_subject1.motion"
+    weight: 1
+  - file: "assets/motions/walk2_subject3.motion"
+    weight: 1
+  - file: "assets/motions/walk2_subject4.motion"
+    weight: 1
+  - file: "assets/motions/walk3_subject1.motion"
+    weight: 1
+  - file: "assets/motions/walk3_subject2.motion"
+    weight: 1
+  - file: "assets/motions/walk3_subject3.motion"
+    weight: 1
+  - file: "assets/motions/walk3_subject4.motion"
+    weight: 1
+  - file: "assets/motions/walk3_subject5.motion"
+    weight: 1
+  - file: "assets/motions/walk4_subject1.motion"
+    weight: 1
