@@ -110,11 +110,21 @@ class BaseAgent(torch.nn.Module):
 
             env_diag_info = self._env.get_diagnostics()
             self._log_train_info(train_info, test_info, env_diag_info, start_time)
+
+            # All ranks must call print_log for distributed aggregation
             self._logger.print_log()
 
             if output_iter:
+                # All ranks must call write_log for distributed aggregation
                 self._logger.write_log()
-                self._output_train_model(self._iter, out_model_file)
+
+                # Only rank 0 saves the model
+                if Logger.is_root():
+                    self._output_train_model(self._iter, out_model_file)
+
+                # Synchronize all ranks after model save
+                if self._distributed:
+                    torch.distributed.barrier()
 
                 self._train_return_tracker.reset()
                 self._curr_obs, self._curr_info = self._reset_envs()
@@ -489,10 +499,8 @@ class BaseAgent(torch.nn.Module):
         return val_fail
 
     def _log_train_info(self, train_info, test_info, env_diag_info, start_time):
-        # Only log on main process (rank 0) in distributed mode
-        if not Logger.is_root():
-            return
-
+        # All ranks need to log for distributed aggregation
+        # Only rank 0 will print/write the aggregated results
         wall_time = (time.time() - start_time) / (60 * 60)  # store time in hours
 
         test_return = test_info["mean_return"]

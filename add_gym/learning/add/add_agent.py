@@ -223,7 +223,8 @@ class ADDAgent(amp_agent.AMPAgent):
 
     def _log_train_info(self, train_info, test_info, env_diag_info, start_time):
         super()._log_train_info(train_info, test_info, env_diag_info, start_time)
-        # Only log on main process (parent class handles early return)
+        # Only log images on rank 0 (no need to aggregate images)
+        from add_gym.util.logger import Logger
         if Logger.is_root() and self._iter % self._iters_per_output == 0:
             self._log_sampler_distribution()
 
