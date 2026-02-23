@@ -97,6 +97,12 @@ You can customize the run using Hydra configuration overrides:
 uv run python -m add_gym.main engine.num_envs=4096
 ```
 
+Example for Multi-GPU training:
+```bash
+PYTHONPATH=$PWD uv run torchrun --standalone --nproc_per_node=8 add_gym/main.py -
+-config-name train.8xh100
+```
+
 ### Mujoco Warp
 
 > [!CAUTION]
