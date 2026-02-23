@@ -1,6 +1,3 @@
-reward:
-  scales:
-    pose: 1.0
 sampler:
   num_segments: 20
   # temperature: 1.0
@@ -15,19 +12,23 @@ num_phase_encoding: 4
 tar_obs_steps: [1, 3, 5, 7]
 num_disc_obs_steps: 1
 rand_reset: True
-zero_center_action: True
-log_tracking_error: True
 
 visualize_ref_char: False
 ref_char_offset: [0, -2.0, 0.0] # m
 
 enable_early_termination: True
-termination_height: 0.3
 enable_vel_obs: False # Controls root vel, root ang vel, and dof vel observations
 
-contact_bodies: ["left_knee_link", "left_ankle_pitch_link", "left_ankle_roll_link", "right_knee_link", "right_ankle_pitch_link", "right_ankle_roll_link"]
-
 motion_file: "assets/motions/dance1_subject3.motion"
+
+contact_bodies:
+  - left_knee_link
+  - left_ankle_pitch_link
+  - left_ankle_roll_link
+  - right_knee_link
+  - right_ankle_pitch_link
+  - right_ankle_roll_link
+
 motion_joint_order:
   - left_hip_pitch_joint
   - left_hip_roll_joint

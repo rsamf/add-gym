@@ -8,7 +8,7 @@ import add_gym.util.torch_util as torch_util
 class BaseModel(torch.nn.Module):
     def __init__(self):
         super().__init__()
-        self._activation = torch.nn.ReLU
+        self._activation = torch.nn.ELU
 
     def _build_action_distribution(self, config: dict, a_space, input):
         in_size = torch_util.calc_layers_out_size(input)

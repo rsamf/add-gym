@@ -22,7 +22,6 @@ class ADDDone:
 
         self._max_episode_length = config.get("max_episode_length", self.add_motion.motion_lib.get_total_length())
         self._enable_early_termination = config["enable_early_termination"]
-        self._termination_height = config["termination_height"]
         self._pose_termination = config.get("pose_termination", False)
         self._pose_termination_dist = config.get("pose_termination_dist", 1.0)
 

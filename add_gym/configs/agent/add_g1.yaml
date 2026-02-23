@@ -1,12 +1,12 @@
 model:
-  actor_net: "fc_4layers_1024units"
+  actor_net: "fc_4layers_512units"
   actor_init_output_scale: 0.01
   actor_std_type: "FIXED"
   action_std: 0.05
   
-  critic_net: "fc_4layers_1024units"
+  critic_net: "fc_4layers_512units"
 
-  disc_net: "fc_2layers_1024units"
+  disc_net: "fc_2layers_512units"
 
 optimizer:
   type: "Adam"
@@ -38,4 +38,4 @@ disc_reward_scale: 2
 task_reward_weight: 0.0
 disc_reward_weight: 1.0
 
-max_samples: 99999999999999
+max_samples: -1

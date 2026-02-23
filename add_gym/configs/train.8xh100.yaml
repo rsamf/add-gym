@@ -1,0 +1,36 @@
+# @package _global_
+defaults:
+  - /agent@agent: add_g1
+  - /engine@engine: genesis
+  - /robot@robot: g1
+  - /task@task: pose
+  - /distributed@distributed: ddp
+  - _self_
+
+mode: train
+experiment_name: all_motions_8xh100
+log_dir: logs/
+
+task:
+  enable_phase_obs: false
+  enable_vel_obs: true
+  enable_tar_obs: true
+  tar_obs_steps: [1, 2, 3, 4]
+  motion_file: "assets/motions/all_motions.yaml"
+  sampler:
+    num_segments: 900
+agent:
+  batch_size: 32
+  steps_per_iter: 256
+  update_epochs: 10
+  grad_clip: 2.0
+  model:
+    actor_net: "fc_4layers_512units"
+    critic_net: "fc_4layers_512units"
+    disc_net: "fc_2layers_512units"
+  optimizer:
+    learning_rate: 2e-4
+engine:
+  num_envs: 4096
+  enable_viewer: false
+  enable_video_recording: false

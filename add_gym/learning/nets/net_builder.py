@@ -2,7 +2,7 @@ import torch
 
 from add_gym.learning.nets import *
 
-def build_net(net_name, input_dict, activation=torch.nn.ReLU):
+def build_net(net_name, input_dict, activation=torch.nn.ELU):
     if (net_name in globals()):
         net_func = globals()[net_name]
         net, info = net_func.build_net(input_dict, activation)

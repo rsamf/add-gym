@@ -37,7 +37,7 @@ class ADDModel(ppo_model.PPOModel):
 
         input_dict = self._build_disc_input_dict(d_obs_shape)
         self._disc_layers, layers_info = net_builder.build_net(
-            net_name, input_dict, activation=self._activation
+            net_name, input_dict, activation=torch.nn.ReLU
         )
 
         layers_out_size = torch_util.calc_layers_out_size(self._disc_layers)

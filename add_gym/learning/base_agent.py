@@ -81,6 +81,12 @@ class BaseAgent(torch.nn.Module):
 
     def train_model(self, out_model_file, log_file):
         max_samples = self._config.get("max_samples", int(1e6))
+
+        def _should_break():
+            if max_samples == -1:
+                return False
+            return self._sample_count >= max_samples
+
         start_time = time.time()
 
         self._curr_obs, self._curr_info = self._reset_envs()
@@ -89,7 +95,7 @@ class BaseAgent(torch.nn.Module):
 
         test_info = None
 
-        while self._sample_count < max_samples:
+        while not _should_break():
             output_iter = self._iter % self._iters_per_output == 0
 
             if output_iter:
@@ -99,7 +105,7 @@ class BaseAgent(torch.nn.Module):
 
             self._sample_count = self._update_sample_count()
 
-            if self._sample_count >= max_samples:
+            if _should_break():
                 output_iter = True
                 test_info = self.test_model(self._test_episodes)
 
@@ -557,10 +563,10 @@ class BaseAgent(torch.nn.Module):
             return
 
         checkpoint = self.save(out_model_file)
-        mlflow.pytorch.log_model(
-            pytorch_model=checkpoint,
-            name=f"model_{iter:010d}",
-            step=iter,
+        mlflow.log_artifact(out_model_file, artifact_path="lastest_model")
+        mlflow.pytorch.log_state_dict(
+            state_dict=checkpoint,
+            artifact_path=f"checkpoints/model_{iter:010d}",
         )
 
 
