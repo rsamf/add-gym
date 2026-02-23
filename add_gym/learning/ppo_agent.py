@@ -4,7 +4,7 @@ import torch
 import add_gym.learning.base_agent as base_agent
 import add_gym.learning.ppo_model as ppo_model
 import add_gym.util.torch_util as torch_util
-
+from add_gym.util.logger import Logger
 
 
 class PPOAgent(base_agent.BaseAgent):
@@ -276,4 +276,5 @@ class PPOAgent(base_agent.BaseAgent):
 
     def _log_train_info(self, train_info, test_info, env_diag_info, start_time):
         super()._log_train_info(train_info, test_info, env_diag_info, start_time)
-        self._logger.log("Exp_Prob", self._get_exp_prob())
+        if Logger.is_root():
+            self._logger.log("Exp_Prob", self._get_exp_prob())

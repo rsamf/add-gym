@@ -1,7 +1,6 @@
 import abc
 import enum
 import numpy as np
-import os
 import time
 import torch
 import mlflow.pytorch
@@ -490,6 +489,10 @@ class BaseAgent(torch.nn.Module):
         return val_fail
 
     def _log_train_info(self, train_info, test_info, env_diag_info, start_time):
+        # Only log on main process (rank 0) in distributed mode
+        if not Logger.is_root():
+            return
+
         wall_time = (time.time() - start_time) / (60 * 60)  # store time in hours
 
         test_return = test_info["mean_return"]
@@ -500,7 +503,6 @@ class BaseAgent(torch.nn.Module):
         train_ep_len = train_info.pop("mean_ep_len")
         train_eps = train_info.pop("num_eps")
 
-        # In distributed mode, this is only called on the main process (rank 0) due to _build_logger logic
         self._logger.log("Iteration", self._iter, collection="1_Info")
         self._logger.log("Wall_Time", wall_time, collection="1_Info")
         self._logger.log("Samples", self._sample_count, collection="1_Info")

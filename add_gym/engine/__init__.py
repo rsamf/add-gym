@@ -22,7 +22,10 @@ from add_gym.engine.base_engine import (
     BaseCamera
 )
 from add_gym.engine.genesis_engine import GenesisEngine
-from add_gym.engine.mjwarp_engine import MJWarpEngine
+try:
+    from add_gym.engine.mjwarp_engine import MJWarpEngine
+except ModuleNotFoundError:
+    MJWarpEngine = None
 
 __all__ = [
     'BaseEngine',

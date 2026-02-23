@@ -3,6 +3,7 @@ import add_gym.learning.amp_agent as amp_agent
 import add_gym.learning.ppo_agent as ppo_agent
 import add_gym.learning.diff_normalizer as diff_normalizer
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,6 +13,7 @@ from add_gym.learning.add.add_done import ADDDone
 from add_gym.learning.add.add_model import ADDModel
 from add_gym.learning.add.add_motion import ADDMotion
 from add_gym.envs.env import ImitationEnvironment
+from add_gym.util.logger import Logger
 
 
 class ADDAgent(amp_agent.AMPAgent):
@@ -26,9 +28,7 @@ class ADDAgent(amp_agent.AMPAgent):
         print(f"Using device: {device}")
         self._env = ImitationEnvironment(device)
         self._add_motion = ADDMotion(self._env, device)
-        self._add_obs = ADDObservation(
-            self._env, self._add_motion, device
-        )
+        self._add_obs = ADDObservation(self._env, self._add_motion, device)
         self._add_reward = ADDReward(self._env, self._add_obs, device)
         self._add_done = ADDDone(
             self._env,
@@ -37,9 +37,7 @@ class ADDAgent(amp_agent.AMPAgent):
             self._env.plane,
             device,
         )
-        super().__init__(
-            self._env, device, distributed=distributed
-        )
+        super().__init__(self._env, device, distributed=distributed)
 
         self._pos_diff = self._build_pos_diff()
 
@@ -225,7 +223,8 @@ class ADDAgent(amp_agent.AMPAgent):
 
     def _log_train_info(self, train_info, test_info, env_diag_info, start_time):
         super()._log_train_info(train_info, test_info, env_diag_info, start_time)
-        if self._iter % self._iters_per_output == 0:
+        # Only log on main process (parent class handles early return)
+        if Logger.is_root() and self._iter % self._iters_per_output == 0:
             self._log_sampler_distribution()
 
     def _log_sampler_distribution(self):
@@ -249,4 +248,3 @@ class ADDAgent(amp_agent.AMPAgent):
 
         self._logger.log_image("Sampler_Distribution", fig, self._iter)
         plt.close(fig)
-

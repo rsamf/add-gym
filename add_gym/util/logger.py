@@ -157,6 +157,10 @@ class Logger:
         template = "{:<25}" * num_keys
         return template
 
+    def log_image(self, tag, fig, step):
+        """No-op image logging for base logger. Override in subclasses."""
+        pass
+
     def _mp_aggregate(self):
         if self._data_buffer is None:
             n = len(self.log_headers)
