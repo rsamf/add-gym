@@ -20,8 +20,9 @@ task:
   sampler:
     num_segments: 900
 agent:
-  batch_size: 32
-  steps_per_iter: 256
+  test_episodes: 5
+  batch_size: 64
+  steps_per_iter: 128
   update_epochs: 10
   grad_clip: 2.0
   model:
