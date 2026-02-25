@@ -179,9 +179,10 @@ class BaseAgent(torch.nn.Module):
 
         if "model" in checkpoint and "optimizer" in checkpoint:
             state_dict = checkpoint["model"]
-            self._optimizer.load_state_dict(checkpoint["optimizer"])
             self._iter = checkpoint.get("iter", 0)
             self._sample_count = checkpoint.get("sample_count", 0)
+            if self._mode == AgentMode.TRAIN:
+                self._optimizer.load_state_dict(checkpoint["optimizer"])
         else:
             state_dict = checkpoint
             self._is_restored = False

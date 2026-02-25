@@ -28,10 +28,10 @@ agent:
   model:
     actor_net: "fc_4layers_512units"
     critic_net: "fc_4layers_512units"
-    disc_net: "fc_2layers_512units"
+    disc_net: "fc_3layers_512units"
   optimizer:
     learning_rate: 2e-4
 engine:
-  num_envs: 4096
+  num_envs: 8192
   enable_viewer: false
   enable_video_recording: false

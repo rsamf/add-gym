@@ -9,6 +9,7 @@ import torch.distributed as dist
 from omegaconf import DictConfig, OmegaConf
 from pathlib import Path
 from add_gym.learning.add.add_agent import ADDAgent
+from add_gym.learning.base_agent import AgentMode
 
 
 def _setup_training_env():
@@ -178,6 +179,7 @@ def train_command(cfg: DictConfig):
 @torch.inference_mode()
 def test_command(cfg: DictConfig):
     agent = ADDAgent()
+    agent.set_mode(AgentMode.TEST)
 
     resume_path = cfg.get("resume_path")
     resume_path = _resolve_resume_path(resume_path)
