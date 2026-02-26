@@ -6,7 +6,7 @@ job:
   name: g1-training-job # Replaced by github workflow with short SHA
   instance_type: ml.g4dn.xlarge  # GPU instance type (1x T4)
   instance_count: 1
-  volume_size: 50  # GB
+  volume_size: 80  # GB
   max_runtime: 432000  # seconds (5 days)
 
 # AWS Configuration
