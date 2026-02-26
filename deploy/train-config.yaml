@@ -20,15 +20,18 @@ robot:
   urdf_path: /opt/ml/input/data/assets/g1_description/g1_29.xml
 
 task:
-  motion_file: /opt/ml/input/data/assets/motions/run2_subject4_trimmed.motion
+  motion_file: /opt/ml/input/data/assets/motions/fight1_subject2_trimmed.motion
   visualize_ref_char: false
   enable_early_termination: true
 
 agent:
-  max_samples: 999999999999999999
   batch_size: 32
   steps_per_iter: 128
-  disc_grad_penalty: 20
+  disc_grad_penalty: 10
+  test_episodes: 5
+  grad_clip: 1.0
+  model:
+    disc_net: fc_3layers_512units
 
 hydra:
   searchpath:
