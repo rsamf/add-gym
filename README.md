@@ -53,6 +53,7 @@ More coming soon...
 
 * [Walk](https://huggingface.co/rsamf/g1-walk) | Motion file: assets/motions/walk1_subject1_trimmed.motion
 * [Dance](https://huggingface.co/rsamf/g1-dance) | Motion file: assets/motions/dance1_subject3.motion
+* [Fight](https://huggingface.co/rsamf/g1-fight) | Motion file: assets/motions/fight1_subject2_trimmed.motion
 
 #### To test out one of the available model weights
 
