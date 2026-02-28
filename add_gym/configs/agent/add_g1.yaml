@@ -6,7 +6,7 @@ model:
   
   critic_net: "fc_4layers_512units"
 
-  disc_net: "fc_2layers_512units"
+  disc_net: "fc_3layers_512units"
 
 optimizer:
   type: "Adam"
